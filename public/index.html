@@ -28,6 +28,8 @@
   <body>
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <h1>React error recovery mechanisms</h1>
+    <p><a href="https://github.com/eps1lon/react-error-recovery-showcase">Source</a> | <a href="https://codesandbox.io/p/github/eps1lon/react-error-recovery-showcase/">Codesandbox</a> | <a href="https://react-error-recovery-showcase.vercel.app/">Deployed</a>
+    <p id="react.version">React version: ?</p>
     <h2>ReactDOM.render</h2>
     <p>No retry. Immediately commit what the error boundary rendered (1x "ErrorBoundary caught" in console)</p>
     <button id="render-legacy-root">Render an error with legacy root</button>
@@ -35,8 +37,13 @@
     <p>Retry once with a sync render (2x "ErrorBoundary caught" in console)</p>
     <button id="render-sync-root">Render an error during sync render</button>
     <h2>concurrent ReactDOMClient.createRoot().render()</h2>
-    <p>Retry once with a sync render (2x "ErrorBoundary caught" in console)</p>
+    <p>Retry once with a concurrent render (2x "ErrorBoundary caught" in console)</p>
     <button id="render-concurrent-root">
+      Render an error during concurrent rendering
+    </button>
+    <h2>concurrent ReactDOMClient.createRoot().render() with a component that recovers during retry</h2>
+    <p>Recover during retry. Notice how redbox is still triggered but no hint why the error didn't actually surface in the UI.</p>
+    <button id="render-concurrent-recovering-root">
       Render an error during concurrent rendering
     </button>
     <!--

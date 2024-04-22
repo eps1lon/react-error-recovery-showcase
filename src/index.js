@@ -48,14 +48,11 @@ function Thrower() {
   throw new Error("Boom");
 }
 
-function ThrowingApp() {
-  return (
-    <ErrorBoundary>
-      <Thrower />
-    </ErrorBoundary>
-  );
-}
-const app = <ThrowingApp />;
+const app = (
+  <ErrorBoundary>
+    <Thrower />
+  </ErrorBoundary>
+);
 
 document.getElementById("render-legacy-root").addEventListener("click", () => {
   const container = document.createElement("div");
@@ -86,3 +83,31 @@ document
       root.render(app);
     });
   });
+
+document
+  .getElementById("render-concurrent-recovering-root")
+  .addEventListener("click", () => {
+    const container = document.createElement("div");
+    event.currentTarget.insertAdjacentElement("afterend", container);
+
+    let render = 0;
+    function RecoveringThrower() {
+      render++;
+      if (render < 3) {
+        return <Thrower />;
+      }
+      return "Recovered";
+    }
+
+    const root = ReactDOMClient.createRoot(container);
+    React.startTransition(() => {
+      root.render(
+        <ErrorBoundary>
+          <RecoveringThrower />
+        </ErrorBoundary>,
+      );
+    });
+  });
+
+document.getElementById("react.version").innerHTML =
+  `React version: ${React.version}`;
