@@ -2,6 +2,31 @@ import * as React from "react";
 import * as ReactDOMClient from "react-dom/client";
 import * as ReactDOM from "react-dom";
 
+const originalCreateElement = document.createElement.bind(document);
+
+document.createElement = function createElementSpy(tagName, options) {
+  console.log('createElement("%s")', tagName);
+
+  return originalCreateElement(tagName, options);
+};
+
+const observer = new MutationObserver((mutationList, observer) => {
+  for (const mutation of mutationList) {
+    if (mutation.type === "childList") {
+      for (const addedNode of mutation.addedNodes) {
+        console.log('added "%s" to the DOM', addedNode.tagName);
+      }
+    }
+  }
+});
+
+// Start observing the target node for configured mutations
+observer.observe(document.body, {
+  attributes: true,
+  childList: true,
+  subtree: true,
+});
+
 class ErrorBoundary extends React.Component {
   state = { error: null };
   static getDerivedStateFromError(error) {
@@ -11,7 +36,8 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.error) {
       console.log("ErrorBoundary caught");
-      return "did error";
+      // We just need a unique tag to unique identify host instance creation from error boundaries
+      return <article>did error</article>;
     }
     return this.props.children;
   }

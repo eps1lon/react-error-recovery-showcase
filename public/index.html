@@ -29,10 +29,13 @@
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <h1>React error recovery mechanisms</h1>
     <h2>ReactDOM.render</h2>
+    <p>No retry. Immediately commit what the error boundary rendered (1x "ErrorBoundary caught" in console)</p>
     <button id="render-legacy-root">Render an error with legacy root</button>
     <h2>sync ReactDOMClient.createRoot().render()</h2>
+    <p>Retry once with a sync render (2x "ErrorBoundary caught" in console)</p>
     <button id="render-sync-root">Render an error during sync render</button>
     <h2>concurrent ReactDOMClient.createRoot().render()</h2>
+    <p>Retry once with a sync render (2x "ErrorBoundary caught" in console)</p>
     <button id="render-concurrent-root">
       Render an error during concurrent rendering
     </button>
